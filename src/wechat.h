@@ -9,7 +9,7 @@
 
 class WechatAccount{
 public:
-  enum Field {info_0 = 0, info_1, name, info_2, intro, info_4, info_5, date};
+  enum Field {info_0 = 0, uuid, name, info_2, intro, info_4, info_5, date};
   WechatAccount(const std::string& str) {
     boost::split(infos_, str, boost::is_any_of("\t"));
   }
@@ -50,9 +50,10 @@ public:
       std::cout << info << std::endl;
     std::cout << std::endl;
   }
+  std::vector<std::pair<std::string, std::string>> locations_;
 private:
   std::vector<std::string> infos_;
-  std::vector<std::pair<std::string, std::string>> locations_;
+
 };
 
 

@@ -63,7 +63,6 @@ public:
   void debug() {
     std::cout << "size of first level:" << root_->next_.size() << std::endl;
     for (auto& p : root_->next_) {
-
       std::cout << wc2s(p.first) << std::endl;
     }
   }
