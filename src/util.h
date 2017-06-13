@@ -28,11 +28,14 @@ std::wstring s2ws(const std::string& str);
 std::string ws2s(const std::wstring& wstr);
 
 //
-int ReadRegionJsonFile(std::string path, std::vector<std::pair<std::string, std::wstring>>& locations);
-int ReadNormalWechatFile(std::string path, std::vector<WechatAccount>& wechat_accounts,
-                         std::unordered_set<std::string>& st_wechat_uuid, int row);
+int ReadRegionJsonFile(const std::string& path,
+                       std::vector<std::pair<std::string, std::wstring>>& locations);
+int ReadNormalWechatFile(const std::string& path,
+                         std::vector<WechatAccount>& wechat_accounts,
+                         std::unordered_set<std::string>& st_wechat_uuid,
+                         int row);
 
 // build path for file under parent path
-std::string GetPath(std::string parent, std::string dir);
+std::string GetPath(const std::string& parent, const std::string& dir);
 
 #endif

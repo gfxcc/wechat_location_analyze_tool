@@ -9,7 +9,6 @@
 #include <unordered_set>
 
 #include "wechat.h"
-#include "trie.h"
 #include "util.h"
 #include "statistic.h"
 #include "review.h"
@@ -20,13 +19,14 @@ using namespace std;
 int main(int argc, char * const argv[]) {
 
   int row = INT_MAX;
+  bool verbose = false;
   string path_region = "./data/",
          path_wechat = "/home/yong/Documents/connectplus/wechat/",
-         path_output = "./output.txt";
+         path_output = "./output";
 
   // load argv
   char c;
-  while ((c = getopt (argc, argv, "hr:w:l:o:")) != -1) {
+  while ((c = getopt (argc, argv, "hr:w:l:v")) != -1) {
     switch (c)
     {
       case 'r':
@@ -38,11 +38,8 @@ int main(int argc, char * const argv[]) {
       case 'l':
         row = stoi(string(optarg));
         break;
-      case 'o':
-        path_output = optarg;
-        break;
-      case 'd':
-        // TODO debug mode
+      case 'v':
+        verbose = true;
         break;
       case 'h':
         Usage();
@@ -73,25 +70,23 @@ int main(int argc, char * const argv[]) {
   }
   cout << "Info: " << wechat_accounts.size() << " wechat accounts have been loaded" << endl;
 
-  // build Trie
-  Trie trie(regions);
-
   // start to match wechat account with region
   cout << "Info: processing..." << endl;
-  Process(trie, wechat_accounts);
+  if (Process(wechat_accounts) != 0) {
+    exit (EXIT_FAILURE);
+  }
 
-  // static
+  DumpIntoFile(wechat_accounts);
+
   Statistic statis(wechat_accounts);
-  statis.Process();
-  statis.Print();
+    statis.Process();
+    statis.Print();
 
-  // output to file
-  OutputToFile(path_output, wechat_accounts);
-
-  // review
-  Review review(wechat_accounts, statis);
-  review.Start();
-
+  if (verbose) {
+    // review
+    Review review(wechat_accounts, statis);
+    review.Start();
+  }
   PrintDateTime();
   return 0;
 }

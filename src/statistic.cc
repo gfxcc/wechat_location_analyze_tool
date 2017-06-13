@@ -7,11 +7,11 @@
 void Statistic::Process() {
   for (auto& account : data_) {
     cnt_++;
-    if (account.GetSizeOfLocation() >= 3) {
+    if (account.GetSizeOfRegion() >= 3) {
       match_++; multi_match_++;
-    } else if (account.GetSizeOfLocation() == 2) {
+    } else if (account.GetSizeOfRegion() == 2) {
       match_++; double_match_++;
-    } else if (account.GetSizeOfLocation() == 1) {
+    } else if (account.GetSizeOfRegion() == 1) {
       match_++; single_match_++;
     }
   }

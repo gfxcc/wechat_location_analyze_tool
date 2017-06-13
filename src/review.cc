@@ -63,7 +63,7 @@ void Review::PrintMatch(Type type, int row) {
     int index = index_[type];
     for (int cnt = 0; cnt < row && index < data_size_; index++) {
       WechatAccount& account = data_[index];
-      if (FitType(type, account.GetSizeOfLocation())) {
+      if (FitType(type, account.GetSizeOfRegion())) {
         account.Print();
         cnt++;
       }

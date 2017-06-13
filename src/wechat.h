@@ -6,56 +6,33 @@
 #include <vector>
 #include <iostream>
 #include <boost/algorithm/string.hpp>
+#include <algorithm>
 
 class WechatAccount{
 public:
-  enum Field {info_0 = 0, uuid, name, info_2, intro, info_4, info_5, date};
-  WechatAccount(const std::string& str) {
-    boost::split(infos_, str, boost::is_any_of("\t"));
-  }
 
-  std::string GetInfo(Field f) {
-    return infos_[f];
-  }
+  static int size_intro_;
+  static int size_name_;
+  static std::string max_intro_;
+  static std::string max_name_;
 
-  void Insert(const std::pair<std::string, std::string>& location) {
-    locations_.emplace_back(location);
-  }
+  enum Field {field_0 = 0, uuid, name, field_3, intro, field_5, field_6, date};
+  WechatAccount(const std::string& str);
 
-  void Print() {
-    std::cout << "--WechatAccount--" << std::endl;
-    std::cout << "name:" << infos_[Field::name] << std::endl;
-    std::cout << "intro:" << infos_[Field::intro] << std::endl;
-    std::cout << "locations:" << locations_.size() << std::endl;
-    for (auto& location : locations_) {
-      std::cout << "        " << location.first << ":" << location.second << std::endl;
-    }
-    std::cout << std::endl;
-  }
+  std::string GetInfo(Field f) const;
 
-  bool IsValid() {
-    return infos_.size() == 8;
-  }
+  void Insert(const std::pair<std::string, std::string>& location);
 
-  int GetInfoSize() {
-    return infos_.size();
-  }
-
-  int GetSizeOfLocation() {
-    return locations_.size();
-  }
-
-  void Debug() {
-    for (auto& info : infos_)
-      std::cout << info << std::endl;
-    std::cout << std::endl;
-  }
-  std::vector<std::pair<std::string, std::string>> locations_;
+  void Print() const;
+  bool IsValid() const;
+  int GetInfoSize() const;
+  int GetSizeOfRegion() const;
+  std::string GetJsonString() const;
+  void Debug() const;
+  std::vector<std::pair<std::string, std::string>> regions_;
 private:
   std::vector<std::string> infos_;
-
 };
-
 
 
 #endif // WECHAT_ANALYZE_WECHAT_H_

@@ -18,9 +18,8 @@ void Usage() {
   cout << "Usage: analyze [OPTION] pattern" << endl;
   cout << "       -r arg: set path_region" << endl;
   cout << "       -w arg: set path_wechat" << endl;
-  cout << "       -o arg: enable output to file and set path_output" << endl;
   cout << "       -l arg: row_need_read_from_wechat" << endl;
-  cout << "       -d    : enable debug mode" << endl;
+  cout << "       -v    : enalbe verbose mode" << endl;
   cout << "       -h    : help" << endl;
 }
 
@@ -31,7 +30,7 @@ void PrintDateTime() {
   cout << "The local date and time is: " << dt << endl;
 }
 
-int ReadRegionJsonFile(string path, vector<pair<string, wstring>>& locations) {
+int ReadRegionJsonFile(const string& path, vector<pair<string, wstring>>& locations) {
   ifstream input(path);
   if (input.is_open() == false) {
     return -1;
@@ -47,30 +46,43 @@ int ReadRegionJsonFile(string path, vector<pair<string, wstring>>& locations) {
   return 0;
 }
 
-int ReadNormalWechatFile(string path, vector<WechatAccount>& wechat_accounts,
-                         unordered_set<string>& st_wechat_uuid, int row) {
+int ReadNormalWechatFile(const string& path, vector<WechatAccount>& wechat_accounts,
+    unordered_set<string>& st_wechat_uuid, int row) {
   ifstream input(path);
   if (input.is_open() == false) {
     return -1;
   }
+
   string line;
-  int cnt = wechat_accounts.size();
+  int cnt = wechat_accounts.size(), cnt_drop = 0;
   while (getline(input, line)) {
     if (cnt++ >= row) {
       cout << endl;
       return 0;
     }
     WechatAccount account(line);
-    string uuid = account.GetInfo(WechatAccount::Field::uuid);
-    if (account.IsValid() && st_wechat_uuid.count(uuid) == 0) {
-      wechat_accounts.emplace_back(line);
-      st_wechat_uuid.insert(uuid);
+
+    if (!account.IsValid()) {
+      //cout << "drop:" << line << endl;
+      cnt_drop++;
+      continue;
+    } else {
+      string uuid = account.GetInfo(WechatAccount::Field::uuid);
+      if (st_wechat_uuid.count(uuid) == 0) {
+        //wechat_accounts.emplace_back(line);
+        wechat_accounts.push_back(move(account));
+        st_wechat_uuid.insert(uuid);
+      } else {
+        continue;
+      }
     }
-    else
-      cout << "drop:" << line << endl;
 
     // print \r info
-    printf("\rInfo: loading wechat... %i ( %i %% )", cnt, cnt * 100 / row);
+    printf("\rInfo: loading wechat... %i drop: %i", cnt, cnt_drop);
+    // print percentage
+    if (row < INT_MAX) {
+      printf(" ( %i %% )  ( %i %% )", cnt * 100 / row, cnt_drop * 100 / row);
+    }
     fflush(stdout);
   }
   cout << endl;
@@ -78,7 +90,7 @@ int ReadNormalWechatFile(string path, vector<WechatAccount>& wechat_accounts,
 
 }
 
-string GetPath(string parent, string dir) {
+string GetPath(const string& parent, const string& dir) {
   return parent + "/" + dir;
 }
 

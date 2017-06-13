@@ -10,7 +10,7 @@ class WechatAccount;
 class Trie;
 
 // main process func
-void Process(Trie& trie, std::vector<WechatAccount>& wechat_accounts);
+int Process(std::vector<WechatAccount>& wechat_accounts);
 
 // recursively read file under path
 int LoadRegionDataFromPath(const std::string& path,
@@ -20,7 +20,15 @@ int LoadRegionDataFromPath(const std::string& path,
 int LoadWechatDataFromPath(const std::string& path, std::vector<WechatAccount>& wechat_accounts,
                            std::unordered_set<std::string>& st_wechat_uuid, int row);
 
+
+int DumpIntoFile(const std::vector<WechatAccount>& wechat_accounts);
+
 //
-int OutputToFile(const std::string& path, std::vector<WechatAccount>& wechat_accounts);
+int OutputToFile(const std::string& path,const std::vector<WechatAccount>& wechat_accounts);
+
+//
+void InsertToDatabase(const std::vector<WechatAccount>& wechat_accounts);
+
+void DumpWechatAccount(const std::vector<WechatAccount>& wechat_accounts);
 
 #endif
