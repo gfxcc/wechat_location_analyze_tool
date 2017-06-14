@@ -1,8 +1,10 @@
 # analyze tool for wechat data
 
 This tools used to analyze region information from indicated format wechat 
-data.   
-[clean data]->[parse data]->[organize data]->[analyze region info]->[statistic]->[json ouput]
+data.  
+
+> [clean data]->[parse data]->[organize data]->[analyze region info]->[statistic]->[json ouput]  
+
 Region information analyzation rely on [CRK](https://github.com/gfxcc/crk)
 
 ## Build
